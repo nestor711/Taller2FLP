@@ -25,7 +25,24 @@
   (caddr fnc-expression)); extractor de los literales
 
 
+;datatypes
+;(define datatype fnc-expression fnc?
+  ;(fnc (num-variables int)(list-clausulas list)))
 
+;(define datatype num-variables num-variables?
+  ;((num-variables int?)
+  ; list-clausulas?))
+
+;Definición de datatypes
+(define-datatype fnc-expression fnc?
+  (make-FNC num-variables lista-clausulas))
+(define-datatype lista-clausulas list?
+  (make-lista-clausulas clausula lista-clausulas))
+(define-datatype clausula fnc?
+  (make-clausula literal))
+(define-datatype literal (int variable) 
+  (make-variable variable)
+  (make-int-literal int variable))
 
 (define gramatica
 '((white-sp
@@ -39,26 +56,7 @@
   (number
    ("-" digit (arbno digit)) number)))
 
-
-;; empty-env
-(define empty-env
-  (lambda () (list 'empty-env)))
-
-;; extend-env
-(define fnc
-  (lambda (var lista)
-    (list 'extend-env var val env)))
-
-;; apply-env
-(define apply-env
-  (lambda (env search-var)
-    (cond ((eqv? (car env) 'empty-env)
-           (eopl:error 'apply-env "No binding for ~s" search-var))
-          ((eqv? (car env) 'extend-env)
-           (let ((saved-var (cadr env))
-                 (saved-val (caddr env))
-                 (saved-env (cadddr env)))
-             (if (eqv? search-var saved-var)
-                 saved-val
-                 (apply-env saved-env search-var))))
-          (else (eopl:error 'apply-env "Expecting an environment, given ~s" env)))))
+(define-datatype lc-exp lc-exp?
+   (var-exp (id symbol?) )
+   (lambda-exp (bound-var symbol?) (body lc-exp?) )
+   (app-exp (rator lc-exp?) (rand lc-exp?) ) )
