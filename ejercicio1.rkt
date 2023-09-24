@@ -25,14 +25,6 @@
   (caddr fnc-expression)); extractor de los literales
 
 
-;datatypes
-;(define datatype fnc-expression fnc?
-  ;(fnc (num-variables int)(list-clausulas list)))
-
-;(define datatype num-variables num-variables?
-  ;((num-variables int?)
-  ; list-clausulas?))
-
 ;Definición de datatypes
 (define-datatype fnc-expression fnc?
   (make-FNC num-variables lista-clausulas))
@@ -44,19 +36,27 @@
   (make-variable variable)
   (make-int-literal int variable))
 
-(define gramatica
-'((white-sp
-   (whitespace) skip)
-  (comment
-   ("//" (arbno (not #\newline))) skip)
-  (identifier
-   (letter (arbno (or letter digit "?"))) symbol)
-  (number
-   (digit (arbno digit)) number)
-  (number
-   ("-" digit (arbno digit)) number)))
+;(define-datatype lc-exp lc-exp?
+  ; (var-exp (id symbol?) )
+   ;(lambda-exp (bound-var symbol?) (body lc-exp?) )
+   ;(app-exp (rator lc-exp?) (rand lc-exp?) ) )
 
-(define-datatype lc-exp lc-exp?
-   (var-exp (id symbol?) )
-   (lambda-exp (bound-var symbol?) (body lc-exp?) )
-   (app-exp (rator lc-exp?) (rand lc-exp?) ) )
+;(define datatype fnc-expression fnc?
+  ;(fnc (num-variables int)(list-clausulas list)))
+
+;(define datatype num-variables num-variables?
+  ;((num-variables int?)
+  ; list-clausulas?))
+
+;(define gramatica
+;'((white-sp
+;   (whitespace) skip)
+; (comment
+ ;  ("//" (arbno (not #\newline))) skip)
+ ; (identifier
+ ;  (letter (arbno (or letter digit "?"))) symbol)
+ ; (number
+ ;  (digit (arbno digit)) number)
+ ; (number
+ ;  ("-" digit (arbno digit)) number)))
+
