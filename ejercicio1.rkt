@@ -1,11 +1,19 @@
 #lang eopl
 
 ; BNF
-;<fnc-expression> ::= "FNC" <num-variables> <lista-clausulas>
-;<num_variables> ::= <int>
+; <fnc-expression> ::= "FNC" <num-variables> <lista-clausulas>
+;  <num_variables> ::= <int>
 ;<lista-clausulas> ::= <clausula> and <lista-clausulas> | <clausula>  
-;<clausula> ::= <literal> "or" <clausula> | <literal>
-;<literal> ::= <variable> | <int> <variable> 
+;       <clausula> ::= <literal> "or" <clausula> | <literal>
+;        <literal> ::= <variable> | <int> <variable> 
+
+
+; <fnc-expression>   ::=  <literal-exp>   (<literal>)
+;                    ::=  <clausula-exp>  (<literal> "or" <literal>)
+;                    ::=  <lista-clausulas-exp>  (<clausula-exp> "and" <clasula-exp>)
+;                    ::=  <program-exp> (<digito>) (<lista-clausulas-exp>
+ 
+
 
 ;Constructores
 (define (fnc-expression fnc num-variables list-clausulas)
@@ -26,15 +34,83 @@
 
 
 ;Definición de datatypes
-(define-datatype fnc-expression fnc?
-  (make-FNC num-variables lista-clausulas))
-(define-datatype lista-clausulas list?
-  (make-lista-clausulas clausula lista-clausulas))
-(define-datatype clausula fnc?
-  (make-clausula literal))
-(define-datatype literal (int variable) 
-  (make-variable variable)
-  (make-int-literal int variable))
+
+(define-datatype expression expression?
+  (literal-exp
+   (literal number?))
+  (clausula-exp
+   (rator expression?)
+   (or symbol?)
+   (rand expression?))
+  (lista-clausula-exp
+   (rator expression?)
+   (and-logic symbol?)
+   (rand expression?))
+  (program-exp
+   (num-variable number?)
+   (body expression?)))
+
+;Ejemplos:
+; > (lista-clausula-exp (
+;                      clausula-exp
+;                      (literal-exp 1) 'or (literal-exp 2))
+;                     'and
+;                     (
+;                      clausula-exp
+;                       (literal-exp 3) 'or (literal-exp 4)))
+
+; ->  #(struct:lista-clausula-exp
+;       #(struct:clausula-exp
+;         #(struct:literal-exp 1)
+;         or
+;         #(struct:literal-exp 2))
+;       and
+;       #(struct:clausula-exp
+;         #(struct:literal-exp 3)
+;         or
+;         #(struct:literal-exp 4)))
+
+
+;  > (clausula-exp (literal-exp 1) 'and (literal-exp 2))
+
+; -> #(struct:clausula-exp
+;      #(struct:literal-exp 1)
+;      or
+;      #(struct:literal-exp 2))
+
+
+;  > literal-exp
+; -> #<procedure:literal-exp>
+
+
+;(define-type fnc-expression
+  ;[make-FNC num-variables lista-clausulas]
+  ;[FNC num-variables lista-clausulas])
+
+; Tipo de dato para una expresión FNC
+;(define-datatype fnc-expression fnc?
+  ;(make-FNC 
+   ; num-variables ; Número de variables en la expresión
+    ;lista-clausulas)) ; Lista de cláusulas
+
+; Tipo de dato para una lista de cláusulas
+;(define-datatype lista-clausulas list?
+  ;(make-lista-clausulas 
+    ;clausula ; Primera cláusula
+    ;lista-clausulas)) ; Resto de la lista de cláusulas
+
+; Tipo de dato para una cláusula
+;(define-datatype clausula fnc?
+  ;(make-clausula 
+    ;literal)) ; Literal que compone la cláusula
+
+; Tipo de dato para un literal (que puede ser un entero o una variable)
+;(define-datatype literal (int variable) 
+  ;(make-variable 
+   ; variable) ; Variable que representa el literal
+  ;(make-int-literal 
+   ; int ; Valor entero del literal
+   ; variable)) ; Variable asociada al literal
 
 ;(define-datatype lc-exp lc-exp?
   ; (var-exp (id symbol?) )
