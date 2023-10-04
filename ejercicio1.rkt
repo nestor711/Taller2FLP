@@ -1,11 +1,26 @@
 #lang eopl
 
+;----------INTEGRANTES-------------- 
+;
+;Nestor David Heredia Gutierrez
+;nestor.heredia@correounivalle.edu.co
+;Código: 2058558
+;
+;Moreno Romero Miguel Angel 
+;miguel.romero@correounivalle.edu.co
+;Código: 2125737
+;
+;Kevin Alejandro Velez Agudelo
+;kevin.alejandro.velez@correounivalle.edu.co
+;Código: 2123281
+
+
 ; BNF
 ; <fnc-expression> ::= "FNC" <num-variables> <lista-clausulas>
 ;  <num_variables> ::= <int>
-;<lista-clausulas> ::= <clausula> and <lista-clausulas> | <clausula>  
-;       <clausula> ::= <literal> "or" <clausula> | <literal>
-;        <literal> ::= <variable> | <int> <variable> 
+;<lista-clausulas> ::= and (<clausula> <lista-clausulas>) | <clausula>  
+;       <clausula> ::= or (<literal> <clausula>) | <literal>
+;        <literal> ::= <int>
 
 
 ; <fnc-expression>   ::=  <literal-exp>   (<literal>)
@@ -16,25 +31,67 @@
 
 
 ;Constructores
-(define (fnc-expression fnc num-variables list-clausulas)
-  (list fnc num-variables list-clausulas)) ;constructor de la funcion FNC
 
-(define (and-logic clausula1 clausula2)
-  list clausula1 'and clausula2) ;constructor del operador and
+(define (fnc-expression num-variables and-clausulas)
+  (cons num-variables and-clausulas)) ;constructor de la funcion FNC
+;Pruebas
+;(fnc-expression 0 (fnc-and-clausulas '()))  salida: (0 and)
 
-(define (or-logic literal1 literal2)
-  (list literal1 'or literal2)); constructor del operador or
+
+
+(define fnc-and-clausulas
+  (lambda (lista-clausulas)
+    (cons 'and lista-clausulas))) ;constructor del operador and
+;Pruebas
+;
+
+
+
+(define (fnc-or-lista int-list)
+  (cons 'or int-list)); constructor del operador or
+;Pruebas
+;
+
+
+
 
 ; Extractores
-(define (extract-list-clausulas fnc-expression)
-  (cadr fnc-expression)); extractor de la lista de clausulas 
 
-(define (extract-clausulas fnc-expression)
-  (caddr fnc-expression)); extractor de los literales
+(define (extract-literales fnc-expression)
+  (cadadr fnc-expression)) ; extractor de la lista de literales
+;Pruebas
+;
+
+(define (extract-lista-clausulas fnc-expression)
+  (cddr fnc-expression)); extractor de la lista de clausulas
+;Pruebas
+;(extract-lista-clausulas (fnc-expression 2 (fnc-and-clausulas (list (fnc-or-lista '(1 2 -1 -2))))))
+
+(define (extract-int fnc-expression)
+  (car fnc-expression)); extractor de la variable
+;Pruebas
+;
 
 
 ;Definición de datatypes
 
+;BNF para los datatypes
+
+; <fnc-expression>   ::=  <fnc-expression>     (int fnc-and-clausulas)
+
+;                    ::=  <fnc-and-clausulas>  :=  <empty-fnc-clausula>
+;                                              :=  (fnc-or-lista <fnc-and-clausulas>)
+
+;                    ::=  <fnc-or-lista>  :=  <empty-fnc-literales>
+;                                         :=  (int <fnc-or-list>)
+
+
+(define-datatype fnc-or-list fnc-or-list?
+  (empty-fnc-literales)
+  (fnc-literales (literal number?) (rest-fnc-or-list fnc-or-list?)))
+
+;Pruebas
+; 
 (define-datatype expression expression?
   (literal-exp
    (literal number?))
@@ -112,27 +169,5 @@
    ; int ; Valor entero del literal
    ; variable)) ; Variable asociada al literal
 
-;(define-datatype lc-exp lc-exp?
-  ; (var-exp (id symbol?) )
-   ;(lambda-exp (bound-var symbol?) (body lc-exp?) )
-   ;(app-exp (rator lc-exp?) (rand lc-exp?) ) )
 
-;(define datatype fnc-expression fnc?
-  ;(fnc (num-variables int)(list-clausulas list)))
-
-;(define datatype num-variables num-variables?
-  ;((num-variables int?)
-  ; list-clausulas?))
-
-;(define gramatica
-;'((white-sp
-;   (whitespace) skip)
-; (comment
- ;  ("//" (arbno (not #\newline))) skip)
- ; (identifier
- ;  (letter (arbno (or letter digit "?"))) symbol)
- ; (number
- ;  (digit (arbno digit)) number)
- ; (number
- ;  ("-" digit (arbno digit)) number)))
 
