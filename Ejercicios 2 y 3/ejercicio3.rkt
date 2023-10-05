@@ -26,12 +26,14 @@
 
 (define (generate-assignments n)
   (if (= n 0)
-      '(())
+      '(())  ; Cuando n es 0, solo hay una asignación vacía.
       (let* ([rest (generate-assignments (- n 1))]
-             [assignments (map (lambda (a) (cons #t a)) rest)])
-        (append assignments (map (lambda (a) (cons #f a)) rest)))
+             [assignments (map (lambda (a) (cons #t a)) rest)]) ; Asignaciones con #t
+             [assignments-false (map (lambda (a) (cons #f a)) rest)]) ; Asignaciones con #f
+        (append assignments assignments-false) ; Concatenar las asignaciones con #t y #f
       )
   )
+
 
 ;; eval-literal (Evaluacón de Literales)
 ;; Proposito
