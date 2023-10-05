@@ -40,9 +40,12 @@
 ;; int x {<bool>} -> bool: Determina si el valor de una variable es verdadero o falso.
 
 (define (eval-literal literal assignment)
+  ; Extraemos el número de variable de literal
   (let ((var (abs literal)))
     (if (< literal 0) 
+        ; Si el literal es negativo, negamos el valor de la variable
         (not (list-ref assignment (- var 1))) 
+        ; Si el literal es positivo, devolvemos el valor de la variable
         (list-ref assignment (- var 1)))))
 
 ;; eval-clause (Evaluar Clausulas)
