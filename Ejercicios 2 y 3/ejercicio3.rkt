@@ -163,6 +163,3 @@
                 (fnc-or-list '(1 -1))
                 (fnc-or-list '(2 3))
                 )))) ; FNC 3 ((1 or -1) and (2 or 3))
-
-(evaluarsat fnc1)
-(evaluarsat fnc2)
